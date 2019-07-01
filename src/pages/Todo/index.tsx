@@ -51,6 +51,7 @@ const Todo: React.FC<ITodoProps> = (props) => {
             return <Grid
               key={todoId}
               item={true}
+              className={todo.get('completed') ? 'strike-through' : ''}
             >
               <Link
                 to={`/todo/${userId}`}

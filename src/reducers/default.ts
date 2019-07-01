@@ -13,6 +13,7 @@ import {
   ITodo,
   AddTodoAction,
   RemoveTodoAction,
+  ToggleTodoAction,
   IUser,
   AddUserAction,
   RemoveUserAction,
@@ -157,11 +158,32 @@ export const reducer = (state: Record<IReducerState> = INITIAL_STATE, action: IA
         payload,
       } = action as RemoveTodoAction;
       const {
-        todoId
+        todoId,
       } = payload;
 
       return state.withMutations((mutableState) => {
         removeIn(mutableState, ['todos', todoId]);
+      });
+    }
+    case DefaultActionTypes.TOGGLE_TODO: {
+      const {
+        payload,
+      } = action as ToggleTodoAction;
+      const {
+        todo,
+      } = payload;
+
+      return state.withMutations((mutableState) => {
+        mutableState.setIn(
+          ['todos', todo.get('id')],
+          todo.withMutations((mutableTodo) => {
+            if (mutableTodo.get('completed')) {
+              mutableTodo.set('completed', false)
+            } else {
+              mutableTodo.set('completed', true)
+            }
+          }),
+        );
       });
     }
     default:

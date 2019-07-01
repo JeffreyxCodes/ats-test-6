@@ -21,6 +21,7 @@ import {
 import {
   AddTodoAction,
   RemoveTodoAction,
+  ToggleTodoAction,
   ITodo,
   TodoFactory,
   IUser,
@@ -38,6 +39,7 @@ interface ITodoComponentProps {
 interface ITodoProps extends ITodoComponentProps {
   addTodo: (userId: number, todo: Record<ITodo>) => void;
   removeTodo: (todoId: number) => void;
+  toggleTodo: (todo: Record<ITodo>) => void;
   userId: number;
   todosForUser: List<Record<ITodo>>;
   user?: Record<IUser>;
@@ -46,6 +48,7 @@ interface ITodoProps extends ITodoComponentProps {
 
 const addTodo = (userId: number, todo: Record<ITodo>) => new AddTodoAction({ userId, todo });
 const removeTodo = (todoId: number) => new RemoveTodoAction({ todoId });
+const toggleTodo = (todo: Record<ITodo>) => new ToggleTodoAction({ todo });
 
 const Todo: React.FC<ITodoProps> = (props) => {
   const [textInput, setTextInput] = useState('');
@@ -53,6 +56,7 @@ const Todo: React.FC<ITodoProps> = (props) => {
   const {
     addTodo,
     removeTodo,
+    toggleTodo,
     userId,
     todosForUser,
     user,
@@ -145,6 +149,12 @@ const Todo: React.FC<ITodoProps> = (props) => {
               <Grid
                 key={index}
                 item={true}
+                className={todo.get('completed') ? 'strike-through' : ''}
+                onClick={
+                  () => {
+                    toggleTodo(todo);
+                  }
+                }
               >
                 {todo.get('title')}
               </Grid>
@@ -186,7 +196,7 @@ const mapStateToProps = (state: any, props: ITodoComponentProps) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
   return {
-    ...bindActionCreators({ addTodo, removeTodo }, dispatch)
+    ...bindActionCreators({ addTodo, removeTodo, toggleTodo }, dispatch)
   };
 };
 

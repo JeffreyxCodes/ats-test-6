@@ -12,6 +12,7 @@ export enum DefaultActionTypes {
   REMOVE_USER = 'REMOVE_USER',
   ADD_TODO = 'ADD_TODO',
   REMOVE_TODO = 'REMOVE_TODO',
+  TOGGLE_TODO = 'TOGGLE_TODO',
   ADD_CAT_FACT = 'ADD_CAT_FACT',
 }
 
@@ -29,12 +30,14 @@ export interface ITodo {
   id:  number;
   userId: number;
   title: string;
+  completed: boolean;
 }
 
 export const TodoFactory = Record<ITodo>({
   id: -1,
   userId: -1,
   title: 'untitled',
+  completed: false,
 });
 
 export class AddUserAction implements IAction {
@@ -70,6 +73,15 @@ export class RemoveTodoAction implements IAction {
   constructor(
     public payload: {
       todoId: number,
+    }
+  ) { }
+}
+
+export class ToggleTodoAction implements IAction {
+  public readonly type = DefaultActionTypes.TOGGLE_TODO;
+  constructor(
+    public payload: {
+      todo: Record<ITodo>,
     }
   ) { }
 }

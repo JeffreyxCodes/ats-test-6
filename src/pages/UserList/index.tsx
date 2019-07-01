@@ -142,7 +142,7 @@ const UserList: React.FC<IUserListProps> = (props) => {
                   }
                 >
                   Remove User
-            </Button>
+                </Button>
               </Grid>
             </Grid>;
           }).valueSeq().toArray()

@@ -20,6 +20,7 @@ import {
 } from '@material-ui/core';
 import {
   AddTodoAction,
+  RemoveTodoAction,
   ITodo,
   TodoFactory,
   IUser,
@@ -36,6 +37,7 @@ interface ITodoComponentProps {
 
 interface ITodoProps extends ITodoComponentProps {
   addTodo: (userId: number, todo: Record<ITodo>) => void;
+  removeTodo: (todoId: number) => void;
   userId: number;
   todosForUser: List<Record<ITodo>>;
   user?: Record<IUser>;
@@ -43,12 +45,14 @@ interface ITodoProps extends ITodoComponentProps {
 
 
 const addTodo = (userId: number, todo: Record<ITodo>) => new AddTodoAction({ userId, todo });
+const removeTodo = (todoId: number) => new RemoveTodoAction({ todoId });
 
 const Todo: React.FC<ITodoProps> = (props) => {
   const [textInput, setTextInput] = useState('');
 
   const {
     addTodo,
+    removeTodo,
     userId,
     todosForUser,
     user,
@@ -133,10 +137,31 @@ const Todo: React.FC<ITodoProps> = (props) => {
         {
           todosForUser.map((todo, index) => {
             return <Grid
+              spacing={1}
+              container={true}
               key={index}
               item={true}
             >
-              {todo.get('title')}
+              <Grid
+                key={index}
+                item={true}
+              >
+                {todo.get('title')}
+              </Grid>
+              <Grid
+                item={true}
+              >
+                <Button
+                  variant='outlined'
+                  onClick={
+                    () => {
+                      removeTodo(todo.get('id'));
+                    }
+                  }
+                >
+                  Delete Task
+                </Button>
+              </Grid>
             </Grid>;
           })
         }
@@ -161,7 +186,7 @@ const mapStateToProps = (state: any, props: ITodoComponentProps) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
   return {
-    ...bindActionCreators({ addTodo }, dispatch)
+    ...bindActionCreators({ addTodo, removeTodo }, dispatch)
   };
 };
 

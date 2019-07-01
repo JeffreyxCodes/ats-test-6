@@ -11,6 +11,7 @@ export enum DefaultActionTypes {
   ADD_USER = 'ADD_USER',
   REMOVE_USER = 'REMOVE_USER',
   ADD_TODO = 'ADD_TODO',
+  REMOVE_TODO = 'REMOVE_TODO',
   ADD_CAT_FACT = 'ADD_CAT_FACT',
 }
 
@@ -62,6 +63,15 @@ export class AddTodoAction implements IAction {
       todo: Record<ITodo>,
     }
   ) {}
+}
+
+export class RemoveTodoAction implements IAction {
+  public readonly type = DefaultActionTypes.REMOVE_TODO;
+  constructor(
+    public payload: {
+      todoId: number,
+    }
+  ) { }
 }
 
 export class AddCatFactAction implements IAction {

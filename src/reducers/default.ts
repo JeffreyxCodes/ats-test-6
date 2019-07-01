@@ -1,8 +1,7 @@
 import {
   fromJS,
   Record,
-  Map,
-  OrderedMap,
+  OrderedMap, // changed from Map to OrderedMap so that entries remain in order after a deletion
   removeIn,
 } from 'immutable';
 import {
@@ -13,6 +12,7 @@ import {
   DefaultActionTypes,
   ITodo,
   AddTodoAction,
+  RemoveTodoAction,
   IUser,
   AddUserAction,
   RemoveUserAction,
@@ -28,7 +28,7 @@ export interface IReducerState {
   lastUserId: number;
   lastTodoId: number;
   users: OrderedMap<number, Record<IUser>>;
-  todos: Map<number, Record<ITodo>>;
+  todos: OrderedMap<number, Record<ITodo>>;
 }
 
 const initialUsers = [
@@ -65,7 +65,7 @@ const INITIAL_STATE = fromJS({
       mutableMap.set(user.get('id'), user);
     })
   }),
-  todos: Map<number, Record<ITodo>>().withMutations((mutableMap) => {
+  todos: OrderedMap<number, Record<ITodo>>().withMutations((mutableMap) => {
     initialTodos.forEach((todo) => {
       mutableMap.set(todo.get('id'), todo);
     })
@@ -150,6 +150,18 @@ export const reducer = (state: Record<IReducerState> = INITIAL_STATE, action: IA
             mutableTodo.set('userId', userId)
           }),
         );
+      });
+    }
+    case DefaultActionTypes.REMOVE_TODO: {
+      const {
+        payload,
+      } = action as RemoveTodoAction;
+      const {
+        todoId
+      } = payload;
+
+      return state.withMutations((mutableState) => {
+        removeIn(mutableState, ['todos', todoId]);
       });
     }
     default:

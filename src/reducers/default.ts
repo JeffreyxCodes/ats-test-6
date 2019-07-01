@@ -106,7 +106,14 @@ export const reducer = (state: Record<IReducerState> = INITIAL_STATE, action: IA
       } = payload;
 
       return state.withMutations((mutableState) => {
-        removeIn(mutableState, ['users', userId]);
+        removeIn(mutableState, ['users', userId]); // removes the user
+
+        mutableState.get('todos').forEach((todo) => { // remove all todo associated with the removed user
+          if (todo.get('userId') === userId) {
+            removeIn(mutableState, ['todos', todo.get('id')]);
+          }
+        });
+
         // for (let newId = userId + 1; newId <= lastUserId; newId++) {
         //   console.log(mutableState.getIn(['users', newId]));
         //   mutableState.setIn(

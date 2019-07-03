@@ -29,6 +29,7 @@ function* addTodo(
   } = action;
   const {
     userId,
+    parentId,
     todo,
   } = payload;
 
@@ -51,6 +52,7 @@ function* addTodo(
 
     yield put(new AddTodoAction({
       userId,
+      parentId,
       todo: TodoFactory({
         title: quote,
       })

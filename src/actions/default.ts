@@ -28,6 +28,7 @@ export const UserFactory = Record<IUser>({
 
 export interface ITodo {
   id:  number;
+  parentId: number;
   userId: number;
   title: string;
   completed: boolean;
@@ -35,6 +36,7 @@ export interface ITodo {
 
 export const TodoFactory = Record<ITodo>({
   id: -1,
+  parentId: -1,
   userId: -1,
   title: 'untitled',
   completed: false,
@@ -63,6 +65,7 @@ export class AddTodoAction implements IAction {
   constructor(
     public payload: {
       userId: number,
+      parentId: number,
       todo: Record<ITodo>,
     }
   ) {}

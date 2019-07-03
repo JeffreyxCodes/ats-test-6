@@ -37,7 +37,7 @@ interface ITodoComponentProps {
 }
 
 interface ITodoProps extends ITodoComponentProps {
-  addTodo: (userId: number, todo: Record<ITodo>) => void;
+  addTodo: (userId: number, parentId: number, todo: Record<ITodo>) => void;
   removeTodo: (todoId: number) => void;
   toggleTodo: (todo: Record<ITodo>) => void;
   userId: number;
@@ -46,12 +46,13 @@ interface ITodoProps extends ITodoComponentProps {
 }
 
 
-const addTodo = (userId: number, todo: Record<ITodo>) => new AddTodoAction({ userId, todo });
+const addTodo = (userId: number, parentId: number, todo: Record<ITodo>) => new AddTodoAction({ userId, parentId, todo });
 const removeTodo = (todoId: number) => new RemoveTodoAction({ todoId });
 const toggleTodo = (todo: Record<ITodo>) => new ToggleTodoAction({ todo });
 
 const Todo: React.FC<ITodoProps> = (props) => {
   const [textInput, setTextInput] = useState('');
+  // const [subTextInput, setSubTextInput] = useState('');
 
   const {
     addTodo,
@@ -110,7 +111,7 @@ const Todo: React.FC<ITodoProps> = (props) => {
             item={true}
           >
             <TextField
-              label='title'
+              label='title of task / sub-task'
               value={textInput}
               onChange={(e) => {
                 setTextInput(e.target.value);
@@ -126,6 +127,7 @@ const Todo: React.FC<ITodoProps> = (props) => {
                 () => {
                   addTodo(
                     userId,
+                    -1,
                     TodoFactory({
                       title: textInput,
                     }),
@@ -139,12 +141,13 @@ const Todo: React.FC<ITodoProps> = (props) => {
           </Grid>
         </Grid>
         {
-          todosForUser.map((todo, index) => {
+          todosForUser.filter(todo => todo.get('parentId') === -1).toList().map((todo, index) => {
             return <Grid
               spacing={1}
               container={true}
               key={index}
               item={true}
+              alignItems="center"
             >
               <Grid
                 key={index}
@@ -165,6 +168,27 @@ const Todo: React.FC<ITodoProps> = (props) => {
                   variant='outlined'
                   onClick={
                     () => {
+                      addTodo(
+                        userId,
+                        todo.get('id'),
+                        TodoFactory({
+                          title: textInput,
+                        }),
+                      );
+                      setTextInput('');
+                    }
+                  }
+                >
+                  Add Sub-Task
+                </Button>
+              </Grid>
+              <Grid
+                item={true}
+              >
+                <Button
+                  variant='outlined'
+                  onClick={
+                    () => {
                       removeTodo(todo.get('id'));
                     }
                   }
@@ -172,6 +196,48 @@ const Todo: React.FC<ITodoProps> = (props) => {
                   Delete Task
                 </Button>
               </Grid>
+
+              {
+                todosForUser.filter(subTodo => subTodo.get('parentId') === todo.get('id')).toList().map((todo) => {
+                  return (
+                    <Grid
+                      spacing={1}
+                      container={true}
+                      key={todo.get('id')}
+                      item={true}
+                      alignItems="center"
+                    >
+                      <Grid
+                        key={todo.get('id')}
+                        item={true}
+                        className={todo.get('completed') ? 'strike-through' : ''}
+                        onClick={
+                          () => {
+                            toggleTodo(todo);
+                          }
+                        }
+                      >
+                        {'--> ' + todo.get('title')}
+                      </Grid>
+                      <Grid
+                        item={true}
+                      >
+                        <Button
+                          variant='outlined'
+                          onClick={
+                            () => {
+                              removeTodo(todo.get('id'));
+                            }
+                          }
+                        >
+                          Delete Sub-Task
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  )
+                })
+              }
+
             </Grid>;
           })
         }

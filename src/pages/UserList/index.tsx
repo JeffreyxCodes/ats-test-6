@@ -98,7 +98,7 @@ const UserList: React.FC<IUserListProps> = (props) => {
           </Grid>
         </Grid>
         {
-          users.map((user, userId) => {
+          users.toList().map((user, userId) => {
             return <Grid
               spacing={1}
               container={true}
@@ -123,7 +123,7 @@ const UserList: React.FC<IUserListProps> = (props) => {
                 item={true}
               >
                 <Link
-                  to={`/todo/${userId}`}
+                  to={`/todo/${user.get('id')}`}
                 >
                   <Typography>
                     todos
@@ -137,7 +137,7 @@ const UserList: React.FC<IUserListProps> = (props) => {
                   variant='outlined'
                   onClick={
                     () => {
-                      removeUser(userId);
+                      removeUser(user.get('id'));
                     }
                   }
                 >

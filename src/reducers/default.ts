@@ -58,6 +58,7 @@ const initialTodos = [
     title: 'Drink Water',
   })
 ]
+
 const INITIAL_STATE = fromJS({
   lastUserId: initialUsers.length,
   lastTodoId: initialTodos.length,
@@ -133,6 +134,7 @@ export const reducer = (state: Record<IReducerState> = INITIAL_STATE, action: IA
       } = action as AddTodoAction;
       const {
         userId,
+        parentId,
         todo,
       } = payload;
 
@@ -148,6 +150,7 @@ export const reducer = (state: Record<IReducerState> = INITIAL_STATE, action: IA
           ['todos', todoId],
           todo.withMutations((mutableTodo) => {
             mutableTodo.set('id', todoId)
+            mutableTodo.set('parentId', parentId)
             mutableTodo.set('userId', userId)
           }),
         );

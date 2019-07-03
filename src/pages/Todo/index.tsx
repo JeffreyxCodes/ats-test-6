@@ -43,21 +43,45 @@ const Todo: React.FC<ITodoProps> = (props) => {
         container={true}
         item={true}
         direction='column'
+        alignItems="flex-start"
         wrap='nowrap'
       >
         {
-          todos.map((todo, todoId) => {
+          todos.filter(todo => todo.get('parentId') === -1).toList().map((todo, todoId) => {
             const userId = todo.get('userId');
             return <Grid
-              key={todoId}
+              container={true}
               item={true}
-              className={todo.get('completed') ? 'strike-through' : ''}
+              direction='column'
+              alignItems="flex-start"
+              wrap='nowrap'
             >
-              <Link
-                to={`/todo/${userId}`}
+              <Grid
+                key={todoId}
+                item={true}
+                className={todo.get('completed') ? 'strike-through' : ''}
               >
-                {todoId}: {todo.get('title')}
-              </Link>
+                <Link
+                  to={`/todo/${userId}`}
+                >
+                  {todoId}: {todo.get('title')}
+                </Link>
+              </Grid>
+
+              {
+                todos.filter(subTodo => subTodo.get('parentId') === todo.get('id')).toList().map((todo) => {
+                  return (
+                    <Grid
+                      key={todo.get('id')}
+                      item={true}
+                      className={todo.get('completed') ? 'strike-through' : ''}
+                    >
+                      --> {todo.get('title')}
+                    </Grid>
+                  )
+                })
+              }
+
             </Grid>;
           }).valueSeq().toArray()
         }

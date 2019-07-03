@@ -34,6 +34,7 @@ const removeUser = (userId: number) => new RemoveUserAction({ userId });
 
 const UserList: React.FC<IUserListProps> = (props) => {
   const [textInput, setTextInput] = useState('');
+  const [inputError, setInputError] = useState('');
 
   const {
     addUser,
@@ -72,10 +73,11 @@ const UserList: React.FC<IUserListProps> = (props) => {
             <TextField
               label='name'
               required
-              error={!textInput}
-              helperText={!textInput ? "Please enter a non-empty name" : ''}
+              error={!!inputError}
+              helperText={inputError}
               value={textInput}
               onChange={(e) => {
+                setInputError('');
                 setTextInput(e.target.value);
               }}
             />
@@ -85,15 +87,18 @@ const UserList: React.FC<IUserListProps> = (props) => {
           >
             <Button
               variant='outlined'
-              disabled={textInput ? false : true}
               onClick={
                 () => {
-                  addUser(
-                    UserFactory({
-                      name: textInput,
-                    }),
-                  );
-                  setTextInput('');
+                  if (!textInput.trim()) {
+                    setInputError('Please enter a non-empty name');
+                  } else {
+                    addUser(
+                      UserFactory({
+                        name: textInput,
+                      }),
+                    );
+                    setTextInput('');
+                  }
                 }
               }
             >

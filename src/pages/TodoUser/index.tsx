@@ -52,7 +52,7 @@ const toggleTodo = (todo: Record<ITodo>) => new ToggleTodoAction({ todo });
 
 const Todo: React.FC<ITodoProps> = (props) => {
   const [textInput, setTextInput] = useState('');
-  // const [subTextInput, setSubTextInput] = useState('');
+  const [inputError, setInputError] = useState('');
 
   const {
     addTodo,
@@ -113,10 +113,11 @@ const Todo: React.FC<ITodoProps> = (props) => {
             <TextField
               label='title of task / sub-task'
               required
-              error={!textInput}
-              helperText={!textInput ? "Please enter a non-empty title" : ''}
+              error={!!inputError}
+              helperText={inputError}
               value={textInput}
               onChange={(e) => {
+                setInputError('');
                 setTextInput(e.target.value);
               }}
             />
@@ -126,17 +127,20 @@ const Todo: React.FC<ITodoProps> = (props) => {
           >
             <Button
               variant='outlined'
-              disabled={textInput ? false : true}
               onClick={
                 () => {
-                  addTodo(
-                    userId,
-                    -1,
-                    TodoFactory({
-                      title: textInput,
-                    }),
-                  );
-                  setTextInput('');
+                  if (!textInput.trim()) {
+                    setInputError('Please enter a non-empty title');
+                  } else {
+                    addTodo(
+                      userId,
+                      -1,
+                      TodoFactory({
+                        title: textInput,
+                      }),
+                    );
+                    setTextInput('');
+                  }
                 }
               }
             >
@@ -170,7 +174,6 @@ const Todo: React.FC<ITodoProps> = (props) => {
               >
                 <Button
                   variant='outlined'
-                  disabled={textInput ? false : true}
                   onClick={
                     () => {
                       addTodo(

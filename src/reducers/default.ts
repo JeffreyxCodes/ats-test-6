@@ -99,7 +99,6 @@ export const reducer = (state: Record<IReducerState> = INITIAL_STATE, action: IA
       })
     }
     case DefaultActionTypes.REMOVE_USER: {
-      // const lastUserId = state.get('lastUserId');
       const {
         payload,
       } = action as RemoveUserAction;
@@ -115,16 +114,6 @@ export const reducer = (state: Record<IReducerState> = INITIAL_STATE, action: IA
             removeIn(mutableState, ['todos', todo.get('id')]);
           }
         });
-
-        // for (let newId = userId + 1; newId <= lastUserId; newId++) {
-        //   console.log(mutableState.getIn(['users', newId]));
-        //   mutableState.setIn(
-        //     ['users', newId],
-        //     mutableState.getIn(['users', newId]).set('id', newId - 1),
-        //   );
-          // console.log(mutableState.get('users'));
-        // };
-        // mutableState.set('lastUserId', lastUserId - 1);
       });
     }
     case DefaultActionTypes.ADD_TODO: {

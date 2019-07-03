@@ -112,6 +112,9 @@ const Todo: React.FC<ITodoProps> = (props) => {
           >
             <TextField
               label='title of task / sub-task'
+              required
+              error={!textInput}
+              helperText={!textInput ? "Please enter a non-empty title" : ''}
               value={textInput}
               onChange={(e) => {
                 setTextInput(e.target.value);
@@ -123,6 +126,7 @@ const Todo: React.FC<ITodoProps> = (props) => {
           >
             <Button
               variant='outlined'
+              disabled={textInput ? false : true}
               onClick={
                 () => {
                   addTodo(
@@ -136,7 +140,7 @@ const Todo: React.FC<ITodoProps> = (props) => {
                 }
               }
             >
-              Add Todo
+              Add Task
             </Button>
           </Grid>
         </Grid>
@@ -166,6 +170,7 @@ const Todo: React.FC<ITodoProps> = (props) => {
               >
                 <Button
                   variant='outlined'
+                  disabled={textInput ? false : true}
                   onClick={
                     () => {
                       addTodo(

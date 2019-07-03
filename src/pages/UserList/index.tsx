@@ -71,6 +71,9 @@ const UserList: React.FC<IUserListProps> = (props) => {
           >
             <TextField
               label='name'
+              required
+              error={!textInput}
+              helperText={!textInput ? "Please enter a non-empty name" : ''}
               value={textInput}
               onChange={(e) => {
                 setTextInput(e.target.value);
@@ -82,6 +85,7 @@ const UserList: React.FC<IUserListProps> = (props) => {
           >
             <Button
               variant='outlined'
+              disabled={textInput ? false : true}
               onClick={
                 () => {
                   addUser(

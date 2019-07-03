@@ -64,7 +64,7 @@ const Todo: React.FC<ITodoProps> = (props) => {
                 <Link
                   to={`/todo/${userId}`}
                 >
-                  {todoId}: {todo.get('title')}
+                  {todoId + 1}: {todo.get('title')}
                 </Link>
               </Grid>
 

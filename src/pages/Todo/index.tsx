@@ -50,6 +50,7 @@ const Todo: React.FC<ITodoProps> = (props) => {
           todos.filter(todo => todo.get('parentId') === -1).toList().map((todo, todoId) => {
             const userId = todo.get('userId');
             return <Grid
+              key={todoId}
               container={true}
               item={true}
               direction='column'
@@ -57,7 +58,6 @@ const Todo: React.FC<ITodoProps> = (props) => {
               wrap='nowrap'
             >
               <Grid
-                key={todoId}
                 item={true}
                 className={todo.get('completed') ? 'strike-through' : ''}
               >

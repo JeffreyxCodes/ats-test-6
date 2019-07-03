@@ -158,7 +158,6 @@ const Todo: React.FC<ITodoProps> = (props) => {
               alignItems="center"
             >
               <Grid
-                key={index}
                 item={true}
                 className={todo.get('completed') ? 'strike-through' : ''}
                 onClick={
@@ -216,7 +215,6 @@ const Todo: React.FC<ITodoProps> = (props) => {
                       alignItems="center"
                     >
                       <Grid
-                        key={todo.get('id')}
                         item={true}
                         className={todo.get('completed') ? 'strike-through' : ''}
                         onClick={
